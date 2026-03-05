@@ -134,23 +134,36 @@ async function apiCall(action, payload) {
     }
 
     try {
-        // Append action to URL query string as many Apps Script backends expect it there (e.parameter.action)
-        const urlWithAction = `${API_URL}?action=${action}`;
+        // Add a timestamp to the URL to prevent caching issues
+        const cacheBusterUrl = `${API_URL}?t=${Date.now()}`;
         
-        const response = await fetch(urlWithAction, {
+        const response = await fetch(cacheBusterUrl, {
             method: "POST",
+            mode: "cors",
             headers: {
-                // Use text/plain to prevent CORS preflight (OPTIONS) request which Apps Script blocks
                 "Content-Type": "text/plain;charset=utf-8"
             },
-            // The backend expects { action: "...", data: { ... } }
-            body: JSON.stringify({ action: action, data: payload })
+            body: JSON.stringify({ action: action, data: payload }),
+            redirect: "follow"
         });
         
-        return await response.json();
+        if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        let result;
+        try {
+            result = JSON.parse(text);
+        } catch (e) {
+            console.error("Failed to parse JSON response:", text);
+            return { status: "error", message: "Invalid response from server. Check your Google Script deployment." };
+        }
+        return result;
     } catch (error) {
-        console.error("API Error:", error);
-        throw error;
+        console.error("Detailed API Error:", error);
+        // Provide a more helpful error for the UI
+        return { status: "error", message: "Connection failed. Please ensure the Google Script is deployed as 'Anyone' and check your internet connection." };
     }
 }
 

@@ -4,25 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Omega School Lesson Tracking</title>
-    <link rel="stylesheet" href="/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#0f172a',
-                        card: '#1e293b',
-                        accent: '#38bdf8',
-                        textMain: '#e2e8f0'
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/src/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-dark text-textMain font-sans antialiased overflow-hidden">
+<body class="bg-dark text-text-main font-sans antialiased overflow-hidden">
     <div id="app">
         <!-- Login View -->
         <div id="login-view" class="view-section active flex h-screen w-full">
@@ -347,6 +332,6 @@
         </div>
     </div>
 
-    <script src="/script.js"></script>
+    <script type="module" src="/src/script.js"></script>
 </body>
 </html>
