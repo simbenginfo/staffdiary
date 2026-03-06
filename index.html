@@ -9,6 +9,8 @@
 </head>
 <body class="bg-dark text-text-main font-sans antialiased overflow-hidden">
     <div id="app">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 hidden"></div>
+        
         <!-- Login View -->
         <div id="login-view" class="view-section active flex h-screen w-full">
             <!-- Hero Section -->
@@ -66,6 +68,10 @@
                         <i class="fas fa-users w-5 text-slate-300"></i>
                         <span class="text-slate-200">Staff List</span>
                     </a>
+                    <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-800 transition-colors" data-target="admin-my-lessons">
+                        <i class="fas fa-book w-5 text-slate-300"></i>
+                        <span class="text-slate-200">My Lessons</span>
+                    </a>
                     <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-800 transition-colors" data-target="admin-add-staff">
                         <i class="fas fa-user-plus w-5 text-slate-300"></i>
                         <span class="text-slate-200">Add Staff</span>
@@ -91,6 +97,10 @@
                     </div>
                     <div class="flex items-center space-x-4">
                         <span class="text-sm text-slate-400 hidden sm:inline">Logged in as Admin</span>
+                        <button id="admin-add-lesson-btn" class="bg-accent hover:bg-sky-500 text-slate-900 px-4 py-2 rounded-lg font-semibold transition-colors flex items-center space-x-2 shadow-[0_0_10px_rgba(56,189,248,0.2)]">
+                            <i class="fas fa-plus"></i>
+                            <span class="hidden sm:inline">Add Lesson</span>
+                        </button>
                         <div class="w-8 h-8 rounded-full bg-accent text-dark flex items-center justify-center font-bold">A</div>
                         <button class="logout-btn md:hidden text-red-400 hover:text-red-300 ml-2">
                             <i class="fas fa-sign-out-alt"></i>
@@ -111,6 +121,36 @@
                         </div>
                         <div id="staff-cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                             <!-- Staff cards injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Admin My Lessons Section -->
+                    <div id="admin-my-lessons" class="admin-section hidden space-y-6">
+                        <div class="flex flex-col md:flex-row justify-between gap-4 bg-card p-4 rounded-xl border border-slate-700">
+                            <div class="relative flex-1 max-w-md">
+                                <i class="fas fa-search absolute left-3 top-3 text-slate-400"></i>
+                                <input type="text" id="admin-my-search-lessons" placeholder="Search my lessons..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-accent text-white">
+                            </div>
+                            <button id="admin-my-export-pdf" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 text-white">
+                                <i class="fas fa-file-pdf text-red-400"></i>
+                                <span>Export My Lessons</span>
+                            </button>
+                        </div>
+
+                        <div class="bg-card rounded-xl border border-slate-700 overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[700px]">
+                                <thead>
+                                    <tr class="bg-slate-800 border-b border-slate-700">
+                                        <th class="p-4 font-semibold text-slate-300 w-32">Date</th>
+                                        <th class="p-4 font-semibold text-slate-300 w-32">Class</th>
+                                        <th class="p-4 font-semibold text-slate-300">Lesson Details</th>
+                                        <th class="p-4 font-semibold text-slate-300 w-24 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-my-lessons-tbody" class="divide-y divide-slate-700">
+                                    <!-- Admin's own lessons injected here -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -161,11 +201,12 @@
 
                         <div class="bg-card rounded-xl border border-slate-700 overflow-x-auto">
                             <table class="w-full text-left border-collapse min-w-[600px]">
-                                <thead>
+                                <thead id="admin-lessons-thead">
                                     <tr class="bg-slate-800 border-b border-slate-700">
                                         <th class="p-4 font-semibold text-slate-300 w-32">Date</th>
                                         <th class="p-4 font-semibold text-slate-300 w-32">Class</th>
                                         <th class="p-4 font-semibold text-slate-300">Lesson Details</th>
+                                        <th class="p-4 font-semibold text-slate-300 w-24 text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="admin-lessons-tbody" class="divide-y divide-slate-700">

@@ -42,10 +42,38 @@ function setupEventListeners() {
         btn.addEventListener('click', handleLogout);
     });
 
+    // Mobile Menus
+    const toggleSidebar = (viewId) => {
+        const sidebar = document.querySelector(`#${viewId} .w-64`);
+        const overlay = document.getElementById('sidebar-overlay');
+        
+        if (sidebar.classList.contains('hidden')) {
+            sidebar.classList.remove('hidden', 'md:flex');
+            sidebar.classList.add('fixed', 'inset-y-0', 'left-0', 'z-40', 'flex', 'w-72', 'shadow-2xl', 'animate-in', 'slide-in-from-left', 'duration-300');
+            overlay.classList.remove('hidden');
+        } else {
+            sidebar.classList.add('hidden', 'md:flex');
+            sidebar.classList.remove('fixed', 'inset-y-0', 'left-0', 'z-40', 'flex', 'w-72', 'shadow-2xl', 'animate-in', 'slide-in-from-left', 'duration-300');
+            overlay.classList.add('hidden');
+        }
+    };
+
+    document.getElementById('mobile-admin-menu').addEventListener('click', () => toggleSidebar('admin-view'));
+    document.getElementById('mobile-staff-menu').addEventListener('click', () => toggleSidebar('staff-view'));
+    document.getElementById('sidebar-overlay').addEventListener('click', () => {
+        if (!views.admin.classList.contains('hidden')) toggleSidebar('admin-view');
+        if (!views.staff.classList.contains('hidden')) toggleSidebar('staff-view');
+    });
+
     // Admin Navigation
     document.querySelectorAll('#admin-view .nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
+            
+            // Close mobile sidebar if open
+            const sidebar = document.querySelector('#admin-view .w-64');
+            if (sidebar.classList.contains('fixed')) toggleSidebar('admin-view');
+
             document.querySelectorAll('#admin-view .nav-item').forEach(n => {
                 n.classList.remove('active', 'bg-slate-800');
             });
@@ -57,13 +85,25 @@ function setupEventListeners() {
             
             if (target === 'admin-staff-list') {
                 document.getElementById('admin-page-title').textContent = 'Staff Members';
+                currentStaffViewId = null;
                 loadStaffList();
+            } else if (target === 'admin-my-lessons') {
+                document.getElementById('admin-page-title').textContent = 'My Lessons';
+                currentStaffViewId = null;
+                loadAdminMyLessons();
             } else if (target === 'admin-add-staff') {
                 document.getElementById('admin-page-title').textContent = 'Add New Staff';
+                currentStaffViewId = null;
             }
         });
     });
 
+    document.getElementById('admin-add-lesson-btn').addEventListener('click', () => openLessonModal());
+    document.getElementById('admin-my-search-lessons').addEventListener('input', (e) => {
+        renderAdminMyLessons(e.target.value);
+    });
+    document.getElementById('admin-my-export-pdf').addEventListener('click', () => exportLessonsToPDF(currentUser));
+    
     // Admin Actions
     document.getElementById('add-staff-form').addEventListener('submit', handleAddStaff);
     document.getElementById('back-to-staff-btn').addEventListener('click', () => {
@@ -297,12 +337,20 @@ function renderAdminLessons(searchText = '') {
 
     filtered.forEach(l => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-slate-800/50 transition-colors';
+        tr.className = 'hover:bg-slate-800/50 transition-colors group';
         const dateDisplay = l.date ? (typeof l.date === 'string' ? l.date : new Date(l.date).toLocaleDateString()) : '';
         tr.innerHTML = `
             <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
-            <td class="p-4 text-slate-300">${l.lesson || ''}</td>
+            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
+            <td class="p-4 whitespace-nowrap text-right">
+                <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="editLesson('${l.row}')" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-slate-400 hover:text-red-400 p-2 transition-colors" onclick="promptDeleteLesson('${l.row}')" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
         `;
         tbody.appendChild(tr);
     });
@@ -336,6 +384,63 @@ async function handleAddStaff(e) {
     } finally {
         btn.innerHTML = 'Create Staff';
     }
+}
+
+async function loadAdminMyLessons() {
+    const tbody = document.getElementById('admin-my-lessons-tbody');
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8"><div class="loader border-accent"></div></td></tr>';
+    
+    try {
+        const res = await apiCall('getLessons', { userId: currentUser });
+        if (res.status === "success") {
+            lessons = res.data;
+            renderAdminMyLessons();
+        }
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-red-400">Failed to load lessons.</td></tr>';
+    }
+}
+
+function renderAdminMyLessons(searchText = '') {
+    const tbody = document.getElementById('admin-my-lessons-tbody');
+    tbody.innerHTML = '';
+    
+    const filtered = lessons.filter(l => {
+        const search = searchText.toLowerCase();
+        
+        const dateStr = l.date ? l.date.toString().toLowerCase() : '';
+        const classStr = l.class ? l.class.toString().toLowerCase() : '';
+        const lessonStr = l.lesson ? l.lesson.toString().toLowerCase() : '';
+        
+        return dateStr.includes(search) || 
+               classStr.includes(search) || 
+               lessonStr.includes(search);
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-slate-400">No lessons found.</td></tr>';
+        return;
+    }
+
+    filtered.forEach(l => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/50 transition-colors group';
+        const dateDisplay = l.date ? (typeof l.date === 'string' ? l.date : new Date(l.date).toLocaleDateString()) : '';
+        tr.innerHTML = `
+            <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
+            <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
+            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
+            <td class="p-4 whitespace-nowrap text-right">
+                <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="editLesson('${l.row}')" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-slate-400 hover:text-red-400 p-2 transition-colors" onclick="promptDeleteLesson('${l.row}')" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 // --- Staff Logic ---
@@ -517,15 +622,28 @@ async function handleSaveLesson(e) {
 
     try {
         let res;
+        const targetUserId = (currentRole === 'admin' && currentStaffViewId) ? currentStaffViewId : currentUser;
+        
         if (row) {
-            res = await apiCall('updateLesson', { userId: currentUser, row, date, className, lessonDetails: details });
+            res = await apiCall('updateLesson', { userId: targetUserId, row, date, className, lessonDetails: details });
         } else {
-            res = await apiCall('addLesson', { userId: currentUser, date, className, lessonDetails: details });
+            res = await apiCall('addLesson', { userId: targetUserId, date, className, lessonDetails: details });
         }
         
         if (res.status === "success") {
             closeLessonModal();
-            loadStaffLessons();
+            if (currentRole === 'admin') {
+                const activeSection = document.querySelector('.admin-section.active');
+                if (activeSection && activeSection.id === 'admin-my-lessons') {
+                    loadAdminMyLessons();
+                } else if (activeSection && activeSection.id === 'admin-staff-lessons') {
+                    // Refresh current staff view
+                    const staffName = document.getElementById('viewing-staff-name').textContent.split("'")[0];
+                    viewStaffLessons(currentStaffViewId, staffName);
+                }
+            } else {
+                loadStaffLessons();
+            }
         } else {
             alert(res.message || "Failed to save lesson");
         }
@@ -551,10 +669,21 @@ async function confirmDeleteLesson() {
     btn.innerHTML = '<div class="loader"></div>';
 
     try {
-        const res = await apiCall('deleteLesson', { userId: currentUser, row: lessonToDelete });
+        const targetUserId = (currentRole === 'admin' && currentStaffViewId) ? currentStaffViewId : currentUser;
+        const res = await apiCall('deleteLesson', { userId: targetUserId, row: lessonToDelete });
         if (res.status === "success") {
             closeDeleteModal();
-            loadStaffLessons();
+            if (currentRole === 'admin') {
+                const activeSection = document.querySelector('.admin-section.active');
+                if (activeSection && activeSection.id === 'admin-my-lessons') {
+                    loadAdminMyLessons();
+                } else if (activeSection && activeSection.id === 'admin-staff-lessons') {
+                    const staffName = document.getElementById('viewing-staff-name').textContent.split("'")[0];
+                    viewStaffLessons(currentStaffViewId, staffName);
+                }
+            } else {
+                loadStaffLessons();
+            }
         } else {
             alert(res.message || "Failed to delete lesson");
         }
@@ -626,18 +755,18 @@ function mockApiCall(action, payload) {
         setTimeout(() => {
             console.log(`Mock API Call: ${action}`, payload);
             
-            if (action === 'loginUser') {
+            if (action === 'login') {
                 if (payload.id === 'admin' && payload.password === 'admin') {
-                    resolve({ success: true, role: 'admin' });
+                    resolve({ status: 'success', data: { role: 'admin' } });
                 } else if (payload.id.startsWith('staff')) {
-                    resolve({ success: true, role: 'staff' });
+                    resolve({ status: 'success', data: { role: 'staff' } });
                 } else {
-                    resolve({ success: false, message: 'Try admin/admin or staff1/any' });
+                    resolve({ status: 'error', message: 'Try admin/admin or staff1/any' });
                 }
             }
             else if (action === 'getStaffList') {
                 resolve({
-                    success: true,
+                    status: 'success',
                     data: [
                         { id: 'staff1', name: 'John Doe' },
                         { id: 'staff2', name: 'Jane Smith' },
@@ -647,29 +776,29 @@ function mockApiCall(action, payload) {
             }
             else if (action === 'getLessons') {
                 resolve({
-                    success: true,
+                    status: 'success',
                     data: [
-                        { row: '1', date: '2023-10-01', className: 'Grade 1A', details: 'Introduction to Alphabets and basic phonics.' },
-                        { row: '2', date: '2023-10-02', className: 'Grade 2B', details: 'Basic addition and subtraction up to 20.' },
-                        { row: '3', date: '2023-10-03', className: 'Grade 1A', details: 'Reading practice: The Cat in the Hat.' },
-                        { row: '4', date: '2023-10-04', className: 'Kindergarten', details: 'Colors and shapes recognition activities.' }
+                        { row: '1', date: '2023-10-01', class: 'Grade 1A', lesson: 'Introduction to Alphabets and basic phonics.' },
+                        { row: '2', date: '2023-10-02', class: 'Grade 2B', lesson: 'Basic addition and subtraction up to 20.' },
+                        { row: '3', date: '2023-10-03', class: 'Grade 1A', lesson: 'Reading practice: The Cat in the Hat.' },
+                        { row: '4', date: '2023-10-04', class: 'Kindergarten', lesson: 'Colors and shapes recognition activities.' }
                     ]
                 });
             }
             else if (action === 'createStaff') {
-                resolve({ success: true });
+                resolve({ status: 'success' });
             }
             else if (action === 'addLesson' || action === 'updateLesson' || action === 'deleteLesson') {
-                resolve({ success: true });
+                resolve({ status: 'success' });
             }
             else if (action === 'changePassword') {
-                resolve({ success: true });
+                resolve({ status: 'success' });
             }
-            else if (action === 'exportLessonsToPDF' || action === 'exportAllStaffLessons') {
-                resolve({ success: true, url: 'https://example.com/mock-pdf' });
+            else if (action === 'exportPDF' || action === 'exportAllPDF') {
+                resolve({ status: 'success', url: 'https://example.com/mock-pdf' });
             }
             else {
-                resolve({ success: false, message: 'Unknown action' });
+                resolve({ status: 'error', message: 'Unknown action' });
             }
         }, 800); // simulate network delay
     });
