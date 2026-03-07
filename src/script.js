@@ -99,6 +99,9 @@ function setupEventListeners() {
         iframe.contentWindow.location.reload();
     });
 
+    document.getElementById('close-details-modal').addEventListener('click', closeDetailsModal);
+    document.getElementById('close-details-btn').addEventListener('click', closeDetailsModal);
+
     // Login
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     
@@ -367,7 +370,7 @@ window.viewStaffLessons = async function(staffId, staffName) {
     document.getElementById('admin-staff-lessons').classList.add('active');
     
     const tbody = document.getElementById('admin-lessons-tbody');
-    tbody.innerHTML = '<tr><td colspan="3" class="text-center py-8"><div class="loader border-accent"></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8"><div class="loader border-accent"></div></td></tr>';
     
     try {
         const res = await apiCall('getLessons', { userId: staffId });
@@ -376,7 +379,7 @@ window.viewStaffLessons = async function(staffId, staffName) {
             renderAdminLessons();
         }
     } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-red-400">Failed to load lessons.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-red-400">Failed to load lessons.</td></tr>';
     }
 };
 
@@ -396,7 +399,7 @@ function renderAdminLessons(searchText = '') {
     });
 
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-center py-8 text-slate-400">No lessons found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-slate-400">No lessons found.</td></tr>';
         return;
     }
 
@@ -409,6 +412,9 @@ function renderAdminLessons(searchText = '') {
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
             <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
+                <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
+                    <i class="fas fa-eye"></i>
+                </button>
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="editLesson('${l.row}')" title="Edit">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -496,6 +502,9 @@ function renderAdminMyLessons(searchText = '') {
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
             <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
+                <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
+                    <i class="fas fa-eye"></i>
+                </button>
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="editLesson('${l.row}')" title="Edit">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -602,6 +611,9 @@ function renderStaffLessons(searchText = '') {
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
             <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
+                <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
+                    <i class="fas fa-eye"></i>
+                </button>
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="editLesson('${l.row}')" title="Edit">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -672,6 +684,29 @@ function closeLessonModal() {
     const modal = document.getElementById('lesson-modal');
     modal.classList.remove('show');
     setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+window.viewLessonDetails = function(row) {
+    const lesson = lessons.find(l => l.row == row);
+    if (!lesson) return;
+
+    const modal = document.getElementById('details-modal');
+    document.getElementById('details-date').textContent = lesson.date ? (typeof lesson.date === 'string' ? lesson.date : new Date(lesson.date).toLocaleDateString()) : '';
+    document.getElementById('details-class').textContent = lesson.class || '';
+    document.getElementById('details-content').textContent = lesson.lesson || '';
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    setTimeout(() => modal.classList.add('show'), 10);
+};
+
+function closeDetailsModal() {
+    const modal = document.getElementById('details-modal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }, 300);
 }
 
 async function handleSaveLesson(e) {

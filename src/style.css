@@ -34,12 +34,12 @@
 }
 
 /* Modal animations */
-#lesson-modal.show, #delete-modal.show {
+#lesson-modal.show, #delete-modal.show, #details-modal.show {
     display: flex;
     opacity: 1;
 }
 
-#lesson-modal.show > div, #delete-modal.show > div {
+#lesson-modal.show > div, #delete-modal.show > div, #details-modal.show > div {
     transform: scale(1);
 }
 
