@@ -11,9 +11,11 @@ let lessonToDelete = null;
 
 // DOM Elements
 const views = {
+    home: document.getElementById('home-view'),
     login: document.getElementById('login-view'),
     admin: document.getElementById('admin-view'),
-    staff: document.getElementById('staff-view')
+    staff: document.getElementById('staff-view'),
+    iframe: document.getElementById('iframe-view')
 };
 
 // Initialize
@@ -26,14 +28,77 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = JSON.parse(storedUser);
         currentUser = user.id;
         currentRole = user.role;
-        showView(currentRole === 'admin' ? 'admin' : 'staff');
         initDashboard();
     }
 
     setupEventListeners();
 });
 
+function openIframe(url, title = 'External Tool') {
+    const iframe = document.getElementById('app-iframe');
+    const loader = document.getElementById('iframe-loader');
+    const titleEl = document.getElementById('iframe-title');
+    const externalLink = document.getElementById('iframe-external-link');
+
+    titleEl.textContent = title;
+    externalLink.href = url;
+    loader.classList.remove('hidden');
+    iframe.src = url;
+
+    iframe.onload = () => {
+        loader.classList.add('hidden');
+    };
+
+    showView('iframe');
+}
+
 function setupEventListeners() {
+    // Mobile Home Menu
+    document.getElementById('mobile-home-menu-btn').addEventListener('click', () => {
+        document.getElementById('mobile-home-menu').classList.remove('hidden');
+    });
+
+    document.getElementById('close-mobile-home-menu').addEventListener('click', () => {
+        document.getElementById('mobile-home-menu').classList.add('hidden');
+    });
+
+    // Home Navigation
+    document.querySelectorAll('.home-nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('mobile-home-menu').classList.add('hidden');
+            const view = link.getAttribute('data-view');
+            const url = link.getAttribute('data-url');
+            
+            if (view) {
+                if (view === 'login' && currentUser) {
+                    showView(currentRole === 'admin' ? 'admin' : 'staff');
+                } else {
+                    showView(view);
+                }
+            } else if (url) {
+                const title = link.querySelector('span')?.textContent || 'External Tool';
+                openIframe(url, title);
+            }
+        });
+    });
+
+    document.querySelectorAll('.back-to-home-btn').forEach(btn => {
+        btn.addEventListener('click', () => showView('home'));
+    });
+
+    document.getElementById('iframe-back-btn').addEventListener('click', () => {
+        document.getElementById('app-iframe').src = '';
+        showView('home');
+    });
+
+    document.getElementById('iframe-refresh-btn').addEventListener('click', () => {
+        const iframe = document.getElementById('app-iframe');
+        const loader = document.getElementById('iframe-loader');
+        loader.classList.remove('hidden');
+        iframe.contentWindow.location.reload();
+    });
+
     // Login
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     

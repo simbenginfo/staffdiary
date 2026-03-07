@@ -11,8 +11,137 @@
     <div id="app">
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 hidden"></div>
         
+        <!-- Home View -->
+        <div id="home-view" class="view-section active flex flex-col h-screen w-full bg-dark overflow-y-auto">
+            <!-- Top Navigation -->
+            <nav class="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-slate-700 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shadow-lg">
+                        <i class="fas fa-graduation-cap text-dark text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-tight">Omega School</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="home-nav-link text-accent font-medium hover:text-white transition-colors" data-view="home">Home</a>
+                    <a href="#" class="home-nav-link text-slate-300 font-medium hover:text-accent transition-colors" data-view="login">Smart Lesson Tracking</a>
+                    <a href="#" class="home-nav-link text-slate-300 font-medium hover:text-accent transition-colors" data-url="https://omgmarkentry.netlify.app">Test Marks Entry</a>
+                </div>
+                <button id="mobile-home-menu-btn" class="md:hidden text-slate-300 hover:text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </nav>
+
+            <!-- Mobile Home Menu -->
+            <div id="mobile-home-menu" class="fixed inset-0 z-[60] bg-dark hidden flex-col p-8 animate-in fade-in duration-300">
+                <div class="flex justify-between items-center mb-12">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-dark text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">Omega School</span>
+                    </div>
+                    <button id="close-mobile-home-menu" class="text-slate-400 hover:text-white">
+                        <i class="fas fa-times text-3xl"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col space-y-6">
+                    <a href="#" class="home-nav-link text-2xl font-bold text-accent" data-view="home">Home</a>
+                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-view="login">Smart Lesson Tracking</a>
+                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://omgmarkentry.netlify.app">Test Marks Entry</a>
+                </div>
+            </div>
+
+            <!-- Hero Section -->
+            <section class="relative py-20 px-6 flex flex-col items-center justify-center text-center overflow-hidden min-h-[80vh]">
+                <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/20 rounded-full blur-[120px] -z-10"></div>
+                
+                <div class="max-w-4xl mx-auto z-10">
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight">
+                        Empowering <span class="text-accent">Teachers</span>,<br>Inspiring Excellence.
+                    </h1>
+                    <p class="text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        Welcome to the official teacher portal of 2 in 1 Omega Kindergarten and Public School. 
+                        Access all your digital tools in one unified platform.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button class="home-nav-link w-full sm:w-auto bg-accent hover:bg-sky-500 text-dark font-bold px-8 py-4 rounded-xl transition-all shadow-xl hover:shadow-accent/20 flex items-center justify-center space-x-2" data-view="login">
+                            <i class="fas fa-book-open"></i>
+                            <span>Lesson Tracking</span>
+                        </button>
+                        <button class="home-nav-link w-full sm:w-auto bg-slate-800 hover:bg-slate-700 text-white font-bold px-8 py-4 rounded-xl transition-all border border-slate-700 flex items-center justify-center space-x-2" data-url="https://omgmarkentry.netlify.app">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Marks Entry</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-24 w-full px-4">
+                    <div class="bg-card p-8 rounded-2xl border border-slate-700 hover:border-accent/50 transition-all group">
+                        <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+                            <i class="fas fa-tasks text-accent text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Smart Lesson Tracking</h3>
+                        <p class="text-slate-400 mb-6">Record daily lessons, track syllabus progress, and generate detailed reports for your classes.</p>
+                        <a href="#" class="home-nav-link text-accent font-semibold flex items-center space-x-2 hover:underline" data-view="login">
+                            <span>Get Started</span>
+                            <i class="fas fa-arrow-right text-sm"></i>
+                        </a>
+                    </div>
+                    <div class="bg-card p-8 rounded-2xl border border-slate-700 hover:border-accent/50 transition-all group">
+                        <div class="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+                            <i class="fas fa-edit text-accent text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Test Marks Entry</h3>
+                        <p class="text-slate-400 mb-6">Efficiently enter and manage student marks for unit tests, term exams, and assessments.</p>
+                        <a href="#" class="home-nav-link text-accent font-semibold flex items-center space-x-2 hover:underline" data-url="https://omgmarkentry.netlify.app">
+                            <span>Open Tool</span>
+                            <i class="fas fa-arrow-right text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="mt-auto py-10 border-t border-slate-800 px-6 text-center">
+                <p class="text-slate-500 text-sm">
+                    &copy; 2024 2 in 1 Omega Kindergarten and Public School, Motbung. All rights reserved.
+                </p>
+            </footer>
+        </div>
+
+        <!-- Iframe View -->
+        <div id="iframe-view" class="view-section flex-col h-screen w-full bg-dark">
+            <header class="h-16 bg-card border-b border-slate-700 flex items-center justify-between px-6">
+                <div class="flex items-center space-x-4">
+                    <button id="iframe-back-btn" class="text-slate-400 hover:text-white transition-colors">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <h2 id="iframe-title" class="text-xl font-semibold text-white">External Tool</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="iframe-refresh-btn" class="text-slate-400 hover:text-white transition-colors" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <a id="iframe-external-link" href="#" target="_blank" class="text-slate-400 hover:text-white transition-colors" title="Open in new tab">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </header>
+            <div class="flex-1 w-full bg-white relative">
+                <div id="iframe-loader" class="absolute inset-0 flex items-center justify-center bg-dark z-10">
+                    <div class="loader border-accent"></div>
+                </div>
+                <iframe id="app-iframe" class="w-full h-full border-none" src=""></iframe>
+            </div>
+        </div>
+
         <!-- Login View -->
-        <div id="login-view" class="view-section active flex h-screen w-full">
+        <div id="login-view" class="view-section flex h-screen w-full">
+            <button class="absolute top-6 left-6 z-50 text-slate-400 hover:text-white transition-colors back-to-home-btn">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
             <!-- Hero Section -->
             <div class="hidden lg:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-slate-900 to-slate-800 p-12 relative overflow-hidden">
                 <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
@@ -56,7 +185,7 @@
         </div>
 
         <!-- Admin Dashboard -->
-        <div id="admin-view" class="view-section hidden h-screen w-full flex bg-dark">
+        <div id="admin-view" class="view-section h-screen w-full flex bg-dark">
             <!-- Sidebar -->
             <div class="w-64 bg-card border-r border-slate-700 flex flex-col hidden md:flex">
                 <div class="p-6 border-b border-slate-700">
@@ -220,7 +349,7 @@
         </div>
 
         <!-- Staff Dashboard -->
-        <div id="staff-view" class="view-section hidden h-screen w-full flex bg-dark">
+        <div id="staff-view" class="view-section h-screen w-full flex bg-dark">
             <!-- Sidebar -->
             <div class="w-64 bg-card border-r border-slate-700 flex flex-col hidden md:flex">
                 <div class="p-6 border-b border-slate-700">
