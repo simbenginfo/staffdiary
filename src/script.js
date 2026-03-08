@@ -67,8 +67,23 @@ function setupEventListeners() {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('mobile-home-menu').classList.add('hidden');
+            
             const view = link.getAttribute('data-view');
             const url = link.getAttribute('data-url');
+
+            // Update active state in sidebar
+            const sidebarLinks = document.querySelectorAll('#home-sidebar .home-nav-link');
+            sidebarLinks.forEach(l => {
+                const lView = l.getAttribute('data-view');
+                const lUrl = l.getAttribute('data-url');
+                if ((view && lView === view) || (url && lUrl === url)) {
+                    l.classList.remove('text-slate-300');
+                    l.classList.add('text-accent', 'bg-accent/10');
+                } else {
+                    l.classList.remove('text-accent', 'bg-accent/10');
+                    l.classList.add('text-slate-300');
+                }
+            });
             
             if (view) {
                 if (view === 'login' && currentUser) {
