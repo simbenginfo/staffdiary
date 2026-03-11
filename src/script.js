@@ -92,7 +92,7 @@ function setupEventListeners() {
                     showView(view);
                 }
             } else if (url) {
-                const title = link.querySelector('span')?.textContent || 'External Tool';
+                const title = link.querySelector('span')?.textContent || link.textContent.trim() || 'External Tool';
                 openIframe(url, title);
             }
         });
