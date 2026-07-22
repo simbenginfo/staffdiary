@@ -42,6 +42,7 @@ function openIframe(url, title = 'External Tool') {
 
     titleEl.textContent = title;
     externalLink.href = url;
+
     loader.classList.remove('hidden');
     iframe.src = url;
 
