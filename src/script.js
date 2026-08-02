@@ -1,4 +1,4 @@
-const API_URL = https://script.google.com/macros/s/AKfycbwL60vZ3freFLzs_gUjV0Wqu9Wg-Q0rOyV81SBjTF1-7T6vSFpjFnVEykkdHoIhwPdX/exec;
+const API_URL = "https://script.google.com/macros/s/AKfycbwL60vZ3freFLzs_gUjV0Wqu9Wg-Q0rOyV81SBjTF1-7T6vSFpjFnVEykkdHoIhwPdX/exec";
 
 // State
 let currentUser = null;
@@ -8,6 +8,53 @@ let lessons = [];
 let currentStaffViewId = null;
 let currentClassFilter = 'All';
 let lessonToDelete = null;
+
+// Date helpers for Indian format DD-MM-YYYY and sorting
+function parseLessonDate(dateVal) {
+    if (!dateVal) return 0;
+    if (typeof dateVal === 'string' && /^\d{2}-\d{2}-\d{4}/.test(dateVal)) {
+        const parts = dateVal.split(/[- ,:]+/);
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const year = parseInt(parts[2], 10);
+        let hours = 0, minutes = 0;
+        if (parts.length >= 5) {
+            hours = parseInt(parts[3], 10);
+            minutes = parseInt(parts[4], 10);
+            if (dateVal.toUpperCase().includes('PM') && hours < 12) hours += 12;
+            if (dateVal.toUpperCase().includes('AM') && hours === 12) hours = 0;
+        }
+        return new Date(year, month, day, hours, minutes).getTime();
+    }
+    const d = new Date(dateVal);
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+}
+
+function formatIndianDate(dateVal) {
+    if (!dateVal) return '';
+    if (typeof dateVal === 'string' && /^\d{2}-\d{2}-\d{4}/.test(dateVal)) {
+        return dateVal;
+    }
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return dateVal;
+
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    const hasTime = (typeof dateVal === 'string' && (dateVal.includes('T') || dateVal.includes(':'))) && 
+                    (d.getHours() !== 0 || d.getMinutes() !== 0 || d.getSeconds() !== 0);
+
+    if (hasTime) {
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        return `${day}-${month}-${year}, ${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+    }
+    return `${day}-${month}-${year}`;
+}
 
 // DOM Elements
 const views = {
@@ -419,10 +466,12 @@ function renderAdminLessons(searchText = '') {
         return;
     }
 
+    filtered.sort((a, b) => parseLessonDate(b.date) - parseLessonDate(a.date));
+
     filtered.forEach(l => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
-        const dateDisplay = l.date ? (typeof l.date === 'string' ? l.date : new Date(l.date).toLocaleDateString()) : '';
+        const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
             <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
@@ -509,10 +558,12 @@ function renderAdminMyLessons(searchText = '') {
         return;
     }
 
+    filtered.sort((a, b) => parseLessonDate(b.date) - parseLessonDate(a.date));
+
     filtered.forEach(l => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
-        const dateDisplay = l.date ? (typeof l.date === 'string' ? l.date : new Date(l.date).toLocaleDateString()) : '';
+        const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
             <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
@@ -618,10 +669,12 @@ function renderStaffLessons(searchText = '') {
         return;
     }
 
+    filtered.sort((a, b) => parseLessonDate(b.date) - parseLessonDate(a.date));
+
     filtered.forEach(l => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
-        const dateDisplay = l.date ? (typeof l.date === 'string' ? l.date : new Date(l.date).toLocaleDateString()) : '';
+        const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
             <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
             <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
@@ -707,7 +760,7 @@ window.viewLessonDetails = function(row) {
     if (!lesson) return;
 
     const modal = document.getElementById('details-modal');
-    document.getElementById('details-date').textContent = lesson.date ? (typeof lesson.date === 'string' ? lesson.date : new Date(lesson.date).toLocaleDateString()) : '';
+    document.getElementById('details-date').textContent = formatIndianDate(lesson.date);
     document.getElementById('details-class').textContent = lesson.class || '';
     document.getElementById('details-content').textContent = lesson.lesson || '';
 
