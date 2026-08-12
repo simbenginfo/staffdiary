@@ -473,9 +473,9 @@ function renderAdminLessons(searchText = '') {
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
         const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
-            <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
-            <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
-            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
+            <td class="p-4 whitespace-nowrap text-slate-300 truncate">${dateDisplay}</td>
+            <td class="p-4 whitespace-nowrap truncate"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
+            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all break-words">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
                     <i class="fas fa-eye"></i>
@@ -565,9 +565,9 @@ function renderAdminMyLessons(searchText = '') {
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
         const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
-            <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
-            <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
-            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
+            <td class="p-4 whitespace-nowrap text-slate-300 truncate">${dateDisplay}</td>
+            <td class="p-4 whitespace-nowrap truncate"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
+            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all break-words">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
                     <i class="fas fa-eye"></i>
@@ -676,9 +676,9 @@ function renderStaffLessons(searchText = '') {
         tr.className = 'hover:bg-slate-800/50 transition-colors group';
         const dateDisplay = formatIndianDate(l.date);
         tr.innerHTML = `
-            <td class="p-4 whitespace-nowrap text-slate-300">${dateDisplay}</td>
-            <td class="p-4 whitespace-nowrap"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
-            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all">${l.lesson || ''}</div></td>
+            <td class="p-4 whitespace-nowrap text-slate-300 truncate">${dateDisplay}</td>
+            <td class="p-4 whitespace-nowrap truncate"><span class="bg-slate-800 px-3 py-1 rounded-full text-sm border border-slate-700 text-slate-200">${l.class || ''}</span></td>
+            <td class="p-4 text-slate-300"><div class="line-clamp-2 group-hover:line-clamp-none transition-all break-words">${l.lesson || ''}</div></td>
             <td class="p-4 whitespace-nowrap text-right">
                 <button class="text-slate-400 hover:text-accent p-2 transition-colors" onclick="viewLessonDetails('${l.row}')" title="View">
                     <i class="fas fa-eye"></i>
