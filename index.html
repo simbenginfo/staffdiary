@@ -96,31 +96,31 @@
                 </nav>
 
             <!-- Mobile Home Menu -->
-            <div id="mobile-home-menu" class="fixed inset-0 z-[60] bg-dark hidden flex-col p-8 animate-in fade-in duration-300">
-                <div class="flex justify-between items-center mb-12">
+            <div id="mobile-home-menu" class="fixed inset-0 z-[60] bg-dark hidden flex-col overflow-y-auto animate-in fade-in duration-300">
+                <div class="sticky top-0 z-10 flex justify-between items-center px-6 py-5 bg-dark/95 backdrop-blur-md border-b border-slate-800">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
+                        <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center shadow-lg">
                             <i class="fas fa-graduation-cap text-dark text-xl"></i>
                         </div>
-                        <span class="text-xl font-bold text-white">Omega School</span>
+                        <span class="text-xl font-bold text-white tracking-tight">Omega School</span>
                     </div>
-                    <button id="close-mobile-home-menu" class="text-slate-400 hover:text-white">
-                        <i class="fas fa-times text-3xl"></i>
+                    <button id="close-mobile-home-menu" class="text-slate-400 hover:text-white p-2">
+                        <i class="fas fa-times text-2xl"></i>
                     </button>
                 </div>
-                <div class="flex flex-col space-y-6">
-                    <a href="#" class="home-nav-link text-2xl font-bold text-accent" data-view="home">Home</a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-view="login">Smart Lesson Tracking</a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://omgmarkentry.netlify.app"><span>Test Marks Entry</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycbzh9In22Dvl58Djc81BSbZO7RDEnZSarRuS19VIa28pIQCZtUfRaVg7NY_qIR-NBxeE/exec"><span>Daily Routine</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycbzssyqHhIGp8vvi1L2P_9CMCyO_AS3Q7AZ6xxdcSAJ54f6Q11EfGyRejNdNDejA_gMe/exec"><span>Exam_Rou & Duty_Chart</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycbxsvNOS7dmnWrAm0pwED2J05d3l2F7oNqVYFmVo4wKbJC6eke0pbWaticW0xhH0xTy8/exec"><span>Question Upload</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycbwuLqGpzvVKL919-oXjpYqQPDHaJOJnJXUohWNK3jIM6yaNw2jpNjc93mCvtl5aQm6nxA/exec"><span>OmegaExam</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://omgexamreport.lovable.app/"><span>Exam report</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycby6z06sVOuODTNGetF6sgEPjoYt1TN67ZwKKV7BrNIMvyYr3YkzH8EeBfRhQA0zZ1gx/exec"><span>Fail Students List</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://script.google.com/macros/s/AKfycbxlG3_0csA5JezU3v1pBbV-FjcdSC_VEkmWRpyCra30d5fndR1mKi4N8GDD0mfh6GrV/exec"><span>Fail Students Entry</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://scriptscalculator.netlify.app"><span>Script Calculator</span></a>
-                    <a href="#" class="home-nav-link text-2xl font-bold text-slate-300" data-url="https://simbengagecalculator.netlify.app"><span>Age Calculator</span></a>
+                <div class="flex flex-col space-y-5 p-6 pb-24">
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-accent" data-view="home">Home</a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-view="login">Smart Lesson Tracking</a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://omgmarkentry.netlify.app"><span>Test Marks Entry</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycbzh9In22Dvl58Djc81BSbZO7RDEnZSarRuS19VIa28pIQCZtUfRaVg7NY_qIR-NBxeE/exec"><span>Daily Routine</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycbzssyqHhIGp8vvi1L2P_9CMCyO_AS3Q7AZ6xxdcSAJ54f6Q11EfGyRejNdNDejA_gMe/exec"><span>Exam_Rou & Duty_Chart</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycbxsvNOS7dmnWrAm0pwED2J05d3l2F7oNqVYFmVo4wKbJC6eke0pbWaticW0xhH0xTy8/exec"><span>Question Upload</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycbwuLqGpzvVKL919-oXjpYqQPDHaJOJnJXUohWNK3jIM6yaNw2jpNjc93mCvtl5aQm6nxA/exec"><span>OmegaExam</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://omgexamreport.lovable.app/"><span>Exam report</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycby6z06sVOuODTNGetF6sgEPjoYt1TN67ZwKKV7BrNIMvyYr3YkzH8EeBfRhQA0zZ1gx/exec"><span>Fail Students List</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://script.google.com/macros/s/AKfycbxlG3_0csA5JezU3v1pBbV-FjcdSC_VEkmWRpyCra30d5fndR1mKi4N8GDD0mfh6GrV/exec"><span>Fail Students Entry</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://scriptscalculator.netlify.app"><span>Script Calculator</span></a>
+                    <a href="#" class="home-nav-link text-xl sm:text-2xl font-bold text-slate-300 hover:text-accent transition-colors" data-url="https://simbengagecalculator.netlify.app"><span>Age Calculator</span></a>
                 </div>
             </div>
 
